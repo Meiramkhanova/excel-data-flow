@@ -11,12 +11,12 @@ RUN \
     # Allow mounting of these files, which have no default
     touch .env && \
     # Create directories for the volumes to inherit the correct permissions
-    pnpm install --no-audit && \
-    pnpm build
+    npm install --no-audit && \
+    npm build
 
 EXPOSE 3000
 
 ENV NODE_ENV=production
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["pnpm", "start"]
+CMD ["npm", "run", "start"]
