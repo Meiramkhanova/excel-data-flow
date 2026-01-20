@@ -12,7 +12,7 @@ RUN \
     touch .env && \
     # Create directories for the volumes to inherit the correct permissions
     npm install --no-audit && \
-    npm build
+    npm run build
 
 EXPOSE 3000
 
