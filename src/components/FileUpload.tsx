@@ -8,13 +8,9 @@ type UploadStatus = "idle" | "uploading" | "success" | "error";
 
 interface FileUploadProps {
   onUpload?: (file: File) => Promise<void>;
-  apiEndpoint?: string;
 }
 
-function FileUpload({
-  onUpload,
-  apiEndpoint = "/api/upload",
-}: FileUploadProps) {
+function FileUpload({ onUpload }: FileUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [status, setStatus] = useState<UploadStatus>("idle");
@@ -82,10 +78,10 @@ function FileUpload({
   };
 
   const handleSubmit = async () => {
-    if (!file) return;
-
     setStatus("uploading");
     setErrorMessage("");
+
+    if (!file) return;
 
     try {
       if (onUpload) {
@@ -94,19 +90,22 @@ function FileUpload({
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch(apiEndpoint, {
+        const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
         });
 
         if (!response.ok) {
-          throw new Error("Ошибка при загрузке файла");
+          const text = await response.text().catch(() => null);
+          throw new Error(text || "Upload failed");
         }
       }
+
       setStatus("success");
-    } catch {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
       setStatus("error");
-      setErrorMessage("Произошла ошибка при отправке файла. Попробуйте снова.");
+      setErrorMessage(message);
     }
   };
 
@@ -141,7 +140,7 @@ function FileUpload({
         {!file ? (
           <div className="flex flex-col items-center gap-6 text-center">
             <div className="relative">
-              <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-primary/10 ring-8 ring-primary/5">
+              <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-primary/10 ring-8 ring-primary/5 motion-safe:animate-pulse">
                 <Upload className="h-12 w-12 text-primary" />
               </div>
               <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-lg">
@@ -240,7 +239,7 @@ function FileUpload({
 
       {/* Status Messages */}
       {status === "success" && (
-        <div className="flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 px-5 py-4 text-sm font-medium text-primary">
+        <div className="flex items-center gap-3 rounded-xl border border-green-400/20 bg-green-400/5 px-5 py-4 text-sm font-medium text-green-500">
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           Файл успешно отправлен на обработку
         </div>
