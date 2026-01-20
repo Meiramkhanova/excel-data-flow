@@ -16,7 +16,7 @@ function Header() {
 
           <div className="header-info-field hidden md:block text-end">
             <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground">
-              Автоматизация XLSX-файлов
+              Автоматизация данных
             </h1>
 
             <p className="mt-2 text text-muted-foreground">
