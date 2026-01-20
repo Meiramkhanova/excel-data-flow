@@ -119,9 +119,16 @@ function FileUpload({
   return (
     <div className="file-upload flex flex-1 flex-col gap-6">
       <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => inputRef.current?.click()}
         className={cn(
-          "drop-zone relative flex flex-1 min-h-50 cursor-pointer flex-col items-center justify-center",
-          "rounded-xl border-2 border-dashed p-8 transition-all duration-300",
+          "relative flex flex-1 min-h-50 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-all duration-300",
+          isDragging
+            ? "border-primary bg-primary/5 scale-[1.01]"
+            : "border-border hover:border-primary/50 hover:bg-secondary/50",
+          file && "border-solid border-primary/30 bg-primary/5",
         )}>
         <input
           ref={inputRef}
@@ -211,7 +218,11 @@ function FileUpload({
                 e.stopPropagation();
                 removeFile();
               }}
-              className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:border-primary/50 hover:bg-secondary hover:text-foreground">
+              className={cn(
+                "flex items-center gap-2 rounded-lg border border-border hover:border-primary/30",
+                "bg-secondary/50 px-4 py-2 text-sm font-medium text-muted-foreground",
+                "transition-all duration-300",
+              )}>
               <X className="h-4 w-4" />
               Удалить файл
             </button>
