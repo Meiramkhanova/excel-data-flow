@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import { AlertCircle, CheckCircle2, Upload, X } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, Upload, X } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
 type UploadStatus = "idle" | "uploading" | "success" | "error";
@@ -234,6 +234,28 @@ function FileUpload({
           Файл успешно отправлен на обработку
         </div>
       )}
+
+      <button
+        onClick={handleSubmit}
+        disabled={!file || status === "uploading"}
+        className="h-14 text-base flex items-center justify-center bg-primary/70 rounded-md text-white font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 hover:cursor-pointer">
+        {status === "uploading" ? (
+          <>
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Отправка файла...
+          </>
+        ) : status === "success" ? (
+          <>
+            <CheckCircle2 className="mr-2 h-5 w-5" />
+            Успешно отправлено
+          </>
+        ) : (
+          <>
+            <Upload className="mr-2 h-5 w-5" />
+            Отправить на обработку
+          </>
+        )}
+      </button>
     </div>
   );
 }
